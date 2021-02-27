@@ -1,1 +1,51 @@
 this is start
+
+
+DispatchQueue.main.async {
+    let view = UIView()
+    view.backgroundColor =  colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+}
+
+DispatchQueue.global(qos: .userInteractive).async {
+    
+}
+
+
+
+func downloadImageFromServer() -> UIImage {
+    //Heavy Task
+    return UIImage()
+}
+
+func updateUI(image: UIImage){
+    
+}
+
+DispatchQueue.global(qos: .background).async {
+    let image = downloadImageFromServer()
+
+    updateUI(image:image) //  -->  글로벌 큐에서 실행시, 에러뜨고 크래시 날 수도 있다.   UI업데이트 같은 경우에는 main 에서
+}
+
+//----------그래서 이렇게 코딩하기 -----------------------
+DispatchQueue.global(qos: .background).async {
+    let image = downloadImageFromServer()
+    
+    DispatchQueue.main.async {
+        updateUI(image:image)
+    }
+}
+
+
+DispatchQueue.global(qos: .background).sync {
+    for i in 0...5 {
+        print("😀\(i)shit")
+    }
+}
+
+DispatchQueue.global(qos: .userInteractive).async {
+    for i in 0...5 {
+        print("👹\(i)Shibal")
+    }
+}
+
